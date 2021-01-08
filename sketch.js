@@ -9,12 +9,10 @@ var backgroundImg,platform;
 var bird, slingshot;
 
 var gameState = "onSling";
-var bg="sprites/bg.png"
-
+var bg = "sprites/bg1.png";
 var score = 0;
 
 function preload() {
-    
     getBackgroundImg();
 }
 
@@ -49,13 +47,14 @@ function setup(){
 }
 
 function draw(){
-    if(backgroundImg){
+    if(backgroundImg)
         background(backgroundImg);
     
-        textSize(35);
-        fill("white");
-        text("Score "+score, 1100, 50);
-    }
+        noStroke();
+        textSize(35)
+        fill("white")
+        text("Score  " + score, width-300, 50)
+    
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
@@ -78,15 +77,13 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();  
-    
-    
+    slingshot.display();    
 }
 
 function mouseDragged(){
-    if (gameState!=="launched"){
+    //if (gameState!=="launched"){
         Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
-    }
+    //}
 }
 
 
@@ -97,21 +94,26 @@ function mouseReleased(){
 
 function keyPressed(){
     if(keyCode === 32){
-       // slingshot.attach(bird.body);
+        bird.trajectory=[]
+        Matter.Body.setPosition(bird.body,{x:200 , y:50});
+       slingshot.attach(bird.body);
     }
 }
 
 async function getBackgroundImg(){
-    var response = await fetch("https://worldtimeapi.org/api/timezone/Asia/Tokyo");
+    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
     var responseJSON = await response.json();
-    var datetime = responseJSON.datetime;
-    var hour =  datetime.slice(11,13);
-    console.log(hour);
-    if(hour>=06&&hour<=19){
-        bg="sprites/bg.png"
 
-    }else{
-        bg="sprites/bg2.jpg"
+    var datetime = responseJSON.datetime;
+    var hour = datetime.slice(11,13);
+    
+    if(hour>=0600 && hour<=1900){
+        bg = "sprites/bg1.png";
     }
-    backgroundImg=loadImage(bg)
+    else{
+        bg = "sprites/bg2.jpg";
+    }
+
+    backgroundImg = loadImage(bg);
+    console.log(backgroundImg);
 }
